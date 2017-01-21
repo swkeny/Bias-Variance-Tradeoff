@@ -1,0 +1,66 @@
+http://insidebigdata.com/2014/10/22/ask-data-scientist-bias-vs-variance-tradeoff/
+
+
+reducible error   : reducible error can be and should be minimized further to maximize accuracy
+irreducible error : inherent uncertainty is associated with a natural variability in a system
+
+reducible error 
+1) error due to squared  : the amount by which the expected model prediction differs from the true value or 
+	target, over the training data (model selection bias)
+2) error due to variance : the amount by which the prediction, over one training set, differs from the 
+	expected predicted value, over all the training sets (inconsistencies in predictions over other training sets)
+
+
+https://theclevermachine.wordpress.com/2013/04/21/model-selection-underfitting-overfitting-and-the-bias-variance-tradeoff/
+has the math for 
+
+P46: 
+"When a given method yields a small training MSE but a large test MSE, we are said to be over?tting the data. 
+This happens because our statistical learning procedure is working too hard to ?nd patterns in the training data, 
+and may be picking up some patterns that are just caused by random chance rather than by true properties of the 
+unknown function f"
+
+"Over?tting refers speci?cally to the case in which a less ?exible model would have yielded a smaller test MSE."
+
+P47: 
+Use cross-validation if no test data is available
+
+P48 -49
+Variance: Degree to which the model changes as test data changes. Generally More flexible models -> higher variances
+Bias: error introduced by approximating a real-life problem, which may be extremely complicated, by a much simpler 
+	model. Generally More flexible models -> lower bias
+
+"As a general rule, as we use more ?exible methods, the variance will increase and the bias will decrease. "
+
+
+http://www.inf.ed.ac.uk/teaching/courses/mlsc/Notes/Lecture4/BiasVariance.pdf
+Use Cross validation or regularization
+
+
+GENERATING THE DATA SETS:
+
+http://stats.stackexchange.com/questions/49052/are-splines-overfitting-the-data
+
+plot((x^3)/e^sqrt(x) +1.5*x -sqrt(x)) from 0 to 250
+
+FITTING THE CURVES
+https://www.r-bloggers.com/fitting-polynomial-regression-in-r/
+
+
+LINKS
+http://stackoverflow.com/questions/9390965/select-random-element-in-a-list-of-r
+http://stats.stackexchange.com/questions/49052/are-splines-overfitting-the-data\
+http://www.theanalysisfactor.com/r-tutorial-4/
+http://stats.stackexchange.com/questions/30975/how-to-add-non-linear-trend-line-to-a-scatter-plot-in-r
+https://stat.ethz.ch/R-manual/R-devel/library/utils/html/write.table.html
+
+http://scikit-learn.org/stable/auto_examples/linear_model/plot_ols.html
+
+http://infohost.nmt.edu/tcc/help/pubs/lang/numpy/web/arange.html
+https://docs.scipy.org/doc/numpy-1.10.1/reference/generated/numpy.arange.html
+https://docs.scipy.org/doc/numpy-1.10.0/reference/generated/numpy.linspace.html
+
+????
+https://en.wikipedia.org/wiki/Runge's_phenomenon
+
+http://stackoverflow.com/questions/18767523/fitting-data-with-numpy
