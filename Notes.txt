@@ -64,3 +64,7 @@ https://docs.scipy.org/doc/numpy-1.10.0/reference/generated/numpy.linspace.html
 https://en.wikipedia.org/wiki/Runge's_phenomenon
 
 http://stackoverflow.com/questions/18767523/fitting-data-with-numpy
+
+in lython notebook to shoe plot inline do this:
+from matplotlib.pyplot import *
+%matplotlib inline
