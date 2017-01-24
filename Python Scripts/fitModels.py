@@ -6,52 +6,41 @@ import matplotlib.pyplot as plt
 
 ymin = -math.pi
 ymax = math.pi
+polynomialDegrees = [1, 5, 9, 14]
 
-fileName = "C:/Users/deifen/Documents/Projects/Bias and overfitting trade offs/Project/SampleData/sampledata 1"
-fileName2 = "C:/Users/deifen/Documents/Projects/Bias and overfitting trade offs/Project/SampleData/sampledata 2"
-fileName3 = "C:/Users/deifen/Documents/Projects/Bias and overfitting trade offs/Project/SampleData/sampledata 3"
+fileRoot = "C:/Users/deifen/Documents/Projects/Bias and overfitting trade offs/Project/SampleData/sampledata "
 
+files = {}
+for x in range(1, 10):
+      files[x] = fileRoot + str(x)
 
-df=pd.read_csv(fileName, sep=',')
-df2=pd.read_csv(fileName2, sep=',')
-df3=pd.read_csv(fileName3, sep=',')
+dataSets = {}
+for x in range(1, 10):
+      dataSets[x] = {}
+      dataSets[x][1] = np.array(pd.read_csv(files[x], sep=',').values[:,0])
+      dataSets[x][2] = np.array(pd.read_csv(files[x], sep=',').values[:,1])
 
-vals=df.values
-vals2=df2.values
-vals3=df3.values
-
-
-x1 = np.array(vals3[:,0])
-y1 = np.array(vals3[:,1])
-
-x_fit = np.linspace(-math.pi,math.pi, 10)
-
-p1 = np.polyfit(x1, y1, 1)
-p2 = np.polyfit(x1, y1, 2)
-p3 = np.polyfit(x1, y1, 3)
-p4 = np.polyfit(x1, y1, 19)
-
-# plt.plot(x1, y1, 'y*')
-# plt.plot(x1, np.polyval(p4, x1), label='quadratic fit', linestyle='--')
-# plt.show()
-
-# Feed data into pyplot.
-polynomial1 = poly1d(p1)
-polynomial2 = poly1d(p2)
-polynomial3 = poly1d(p3)
-polynomial4 = poly1d(p4)
+solutions = {}
+for x in range(1, 10):
+      solutions[x]={}
+      for s in range(0, polynomialDegrees.__len__()):
+            x1 = dataSets[x][1]
+            y1 = dataSets[x][2]
+            func = np.polyfit(x1, y1, polynomialDegrees[s])
+            solutions[x][s+1] = poly1d(func)
 
 xpoints = np.linspace(-math.pi, math.pi, 100)
 axes = plt.gca()
 axes.set_ylim([ymin,ymax])
 
-plt.plot(x1,y1,'x',xpoints,polynomial1(xpoints),'r-')
-plt.plot(xpoints,polynomial2(xpoints),'b-')
-plt.plot(xpoints,polynomial3(xpoints),'g-')
-plt.plot(xpoints,polynomial4(xpoints),'y-')
+index = 6
+x= dataSets[index][1]
+y = dataSets[index][2]
+plt.plot(x,y,'bx')
+
+for s in range(0, polynomialDegrees.__len__()):
+      plt.plot(xpoints,solutions[index][s+1](xpoints),'r-')
+      print("Mean squared error: %.2f"
+            % np.mean((np.polyval(solutions[index][s+1], x) - y) ** 2))
+      print(solutions[index][s+1])
 plt.show()
-
-
-print("Mean squared error: %.2f"
-      % np.mean((np.polyval(p4, x1) - y1) ** 2))
-print(p3)
