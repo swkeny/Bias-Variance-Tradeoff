@@ -68,3 +68,6 @@ http://stackoverflow.com/questions/18767523/fitting-data-with-numpy
 in lython notebook to shoe plot inline do this:
 from matplotlib.pyplot import *
 %matplotlib inline
+
+
+https://docs.scipy.org/doc/numpy/reference/generated/numpy.stack.html#numpy.stack
