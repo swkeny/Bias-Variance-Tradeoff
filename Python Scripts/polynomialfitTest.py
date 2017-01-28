@@ -12,8 +12,8 @@ xmin = -math.pi
 xmax = math.pi
 ymin = -2
 ymax = 2
-polynomialDegrees = [1, 3, 6, 9, 15]
-dataPointsPerTrainingSet = 80
+polynomialDegrees = [1, 2, 3, 5, 12]
+dataPointsPerTrainingSet = 100
 seedMap = [123, 232, 13, 100, 344, 45, 71, 99, 199, 80]
 numberOfTrainingSets = seedMap.__len__()
 
@@ -50,12 +50,12 @@ def avgFittedFunction(solutionSet):
 def solutionBias_ByComplexity(dataSetTest, solutionSet):
       solutionBias = {}
       avgEstimators = avgFittedFunction(solutionSet)
-      for i in range(numberOfTrainingSets):
-            solutionBias[i] ={}
-            x = dataSetTest[i]['x']
-            y = dataSetTest[i]['y']
-            for s in range(polynomialDegrees.__len__()):
-                  solutionBias[i][s] = np.mean(np.polyval(avgEstimators[s], x) - y)
+      for s in range(polynomialDegrees.__len__()):
+            solutionBiasPerDataSet = []
+            x = pd.Series([random.uniform(-math.pi, math.pi) for i in range(dataPointsPerTrainingSet)])
+            f = np.vectorize(lambda x: math.sin(x))  # our true function
+            y = x.apply(f)
+            solutionBias[s] = np.mean(np.polyval(avgEstimators[s], x)-y)
       return solutionBias
 
 dataSetsTrain = {}
@@ -92,7 +92,7 @@ y = dataSetsTrain[index]['y']
 
 
 # ******Plot Scatter Plot Of Training Data Set******
-plt.plot(x,y,'bx')
+# plt.plot(x,y,'bx')
 
 #******Plot By Polynomial Complexity For One Training Set******
 # for s in range(polynomialDegrees.__len__()):
@@ -103,14 +103,21 @@ plt.plot(x,y,'bx')
 # plt.show()
 
 # ******Plot By Polynomial Complexity Across All Training Sets with Average Fit******
-plt.plot(xpoints, sin(xpoints), 'k-', linewidth=4)
-plt.plot(xpoints, avgFittedFunction(solutions)[solutionIndex](xpoints), 'g-', linewidth=4)
-for i in range(numberOfTrainingSets):
-      print('')
-      plt.plot(xpoints,solutions[i][solutionIndex](xpoints),'r-')
+# plt.plot(xpoints, sin(xpoints), 'k-', linewidth=4)
+# plt.plot(xpoints, avgFittedFunction(solutions)[solutionIndex](xpoints), 'g-', linewidth=4)
+# for i in range(numberOfTrainingSets):
+#       print('')
+#       plt.plot(xpoints,solutions[i][solutionIndex](xpoints),'r-')
       # print(solutions[index][s])
-      print(training_MSE_ByComplexity(dataSetsTrain, solutions)[index][s])
-plt.show()
+#       print(training_MSE_ByComplexity(dataSetsTrain, solutions)[index][s])
+# plt.show()
+
+# # ******Plot By Polynomial Complexity Across All Training Sets with Average Fit******
+# plt.plot(xpoints, sin(xpoints), 'k-', linewidth=4)
+# for s in range(polynomialDegrees.__len__()):
+#       plt.plot(xpoints, avgFittedFunction(solutions)[s](xpoints), 'g-', linewidth=2)
+# plt.show()
+
 
 # ******Training MSE by complexity for a training data set******
 # trainingMSE = training_MSE_ByComplexity(dataSetsTrain, solutions)
@@ -118,10 +125,10 @@ plt.show()
 #       print(trainingMSE[index][s])
 
 
-# NEED TO FIX THIS
+# Prints solution bias by complexity
 # solutionBias = solutionBias_ByComplexity(dataSetsTest, solutions)
 # for s in range(polynomialDegrees.__len__()) :
-#       print(solutionBias[index][s])
+#       print(solutionBias[s])
 
 
 
@@ -130,5 +137,4 @@ plt.show()
 # Validate avg fitted function
 # print(solutions)
 # print(avgFittedFunction(solutions)[2])
-
 
