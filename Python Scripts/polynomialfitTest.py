@@ -15,7 +15,7 @@ polynomialDegrees = [1, 2, 3, 6, 10]
 dataPointsPerTrainingSet = 50
 testSplit = 0.2
 
-seedMap = [123, 232, 13]#, 100, 344, 45, 71, 99, 199, 80]
+seedMap = [123, 232, 13, 100, 344, 45, 71, 99, 199, 80]
 numberOfTrainingSets = seedMap.__len__()
 
 # generate noisy data from an underlying function
@@ -48,7 +48,7 @@ def transformArray(array, len):
                   transformedArray[i][j] = array[j][i]
       return transformedArray
 #For a given solution, average squared error across all datasets
-def training_MSE_toPlot(xpoints, solutionSet, solutionIndex):
+def training_MSE_toPlot(xpoints, solutionSet, solutionIndex, index):
       meanSquaredError = {}
       result = {}
       len = xpoints.__len__()
@@ -56,7 +56,7 @@ def training_MSE_toPlot(xpoints, solutionSet, solutionIndex):
       f = np.vectorize(lambda x: math.sin(x))
       y = x.apply(f)
       for i in range(numberOfTrainingSets):
-            yhat = solutions[index][solutionIndex](xpoints)
+            yhat = solutions[i][solutionIndex](xpoints)
             meanSquaredError[i]= (yhat - y) ** 2
       transformedMeanSquareError = transformArray(meanSquaredError, len)
       for row in range(len):
@@ -110,13 +110,13 @@ for x in range(numberOfTrainingSets):
 
 
 
-xpoints = np.linspace(-math.pi, math.pi, 10)
+xpoints = np.linspace(-math.pi, math.pi, 100)
 axes = plt.gca()
 axes.set_xlim([xmin,xmax])
 axes.set_ylim([ymin,ymax])
 
 index = 0
-solutionIndex = 2
+solutionIndex = 4
 x = dataSetsTrain[index]['x']
 y = dataSetsTrain[index]['y']
 
@@ -146,23 +146,23 @@ y = dataSetsTrain[index]['y']
 # plt.show()
 
 # ******Plot By Polynomial Complexity Across All Training Sets with Average Fit******
-# error = training_MSE_toPlot(xpoints, solutions, solutionIndex)
-# #print(pd.Series(error))
-# ax1 = plt.subplot(311)
-# ax1.plot(xpoints, sin(xpoints), 'k-', linewidth=4)
-# ax1.plot(xpoints, avgFittedFunction(solutions)[solutionIndex](xpoints), 'g-', linewidth=4)
-# ax1.set_xlim([xmin,xmax])
-# ax1.set_ylim([-1.25,1.25])
-# for i in range(numberOfTrainingSets):
-#       # print('')
-#       ax1.plot(xpoints,solutions[i][solutionIndex](xpoints),'y-')
-#       # print(solutions[index][s])
-#       # print(training_MSE_ByComplexity(dataSetsTrain, solutions)[index][s])
-# ax2 = plt.subplot(312, sharex=ax1)
-# plt.plot(xpoints, pd.Series(error), 'r--', linewidth=4)
-# ax2.set_xlim([xmin,xmax])
-# ax2.set_ylim([0,.5])
-# plt.show()
+error = training_MSE_toPlot(xpoints, solutions, solutionIndex, index)
+#print(pd.Series(error))
+ax1 = plt.subplot(311)
+ax1.plot(xpoints, sin(xpoints), 'k-', linewidth=4)
+ax1.plot(xpoints, avgFittedFunction(solutions)[solutionIndex](xpoints), 'g-', linewidth=4)
+ax1.set_xlim([xmin,xmax])
+ax1.set_ylim([-1.25,1.25])
+for i in range(numberOfTrainingSets):
+      # print('')
+      ax1.plot(xpoints,solutions[i][solutionIndex](xpoints),'y-')
+      # print(solutions[index][s])
+      # print(training_MSE_ByComplexity(dataSetsTrain, solutions)[index][s])
+ax2 = plt.subplot(312, sharex=ax1)
+plt.plot(xpoints, pd.Series(error), 'r--', linewidth=4)
+ax2.set_xlim([xmin,xmax])
+ax2.set_ylim([0,.5])
+plt.show()
 
 # ******Plot By Polynomial Complexity Across All Training Sets with Average Fit******
 # plt.plot(xpoints, sin(xpoints), 'k-', linewidth=4)
@@ -191,4 +191,4 @@ y = dataSetsTrain[index]['y']
 # print(avgFittedFunction(solutions)[2])
 
 # Training MSE plot validation
-print(training_MSE_toPlot(xpoints, solutions, solutionIndex))
+# print(training_MSE_toPlot(xpoints, solutions, solutionIndex, index))
