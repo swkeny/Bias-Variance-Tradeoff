@@ -1,5 +1,4 @@
 import math
-import random
 from sklearn import cross_validation, linear_model
 from sklearn.cross_validation import train_test_split
 from pylab import *
@@ -12,11 +11,11 @@ xmin = -math.pi
 xmax = math.pi
 ymin = -2
 ymax = 2
-polynomialDegrees = [1, 2, 3, 10, 15]
+polynomialDegrees = [1, 2, 3, 6, 10]
 dataPointsPerTrainingSet = 50
 testSplit = 0.2
 
-seedMap = [123, 232, 13, 100, 344, 45, 71, 99, 199, 80]
+seedMap = [123, 232, 13]#, 100, 344, 45, 71, 99, 199, 80]
 numberOfTrainingSets = seedMap.__len__()
 
 # generate noisy data from an underlying function
@@ -38,6 +37,7 @@ def training_MSE_ByComplexity(dataSetTrain, solutionSet):
             avgMSE[i] = {}
             for s in range(polynomialDegrees.__len__()):
                   avgMSE[i][s] = np.mean((np.polyval(solutionSet[i][s], x) - y) ** 2)
+
       return avgMSE
 
 def transformArray(array, len):
@@ -110,15 +110,16 @@ for x in range(numberOfTrainingSets):
 
 
 
-xpoints = np.linspace(-math.pi, math.pi, 100)
+xpoints = np.linspace(-math.pi, math.pi, 10)
 axes = plt.gca()
 axes.set_xlim([xmin,xmax])
 axes.set_ylim([ymin,ymax])
 
 index = 0
-solutionIndex = 0
+solutionIndex = 2
 x = dataSetsTrain[index]['x']
 y = dataSetsTrain[index]['y']
+
 
 # ******Plot Scatter Plot Of Training Data Set******
 # plt.plot(x,y,'bx')
@@ -131,20 +132,37 @@ y = dataSetsTrain[index]['y']
 #       print(solutions[index][s])
 # plt.show()
 
-# ******Plot By Polynomial Complexity Across All Training Sets with Average Fit******
-error = training_MSE_toPlot(xpoints, solutions, solutionIndex)
-# print(xpoints)
-# print(pd.Series(error))
 
-plt.plot(xpoints, sin(xpoints), 'k-', linewidth=4)
-plt.plot(xpoints, avgFittedFunction(solutions)[solutionIndex](xpoints), 'g-', linewidth=4)
-plt.plot(xpoints, pd.Series(error), 'r--', linewidth=4)
-for i in range(numberOfTrainingSets):
+# ax1 = plt.subplot(131)
+# ax1.plot([1,2], [3,4])
+# ax1.set_xlim([0, 5])
+# ax1.set_ylim([0, 5])
+#
+#
+# ax2 = plt.subplot(132)
+# ax2.scatter([1, 2],[3, 4])
+# ax2.set_xlim([0, 5])
+# ax2.set_ylim([0, 5])
+# plt.show()
+
+# ******Plot By Polynomial Complexity Across All Training Sets with Average Fit******
+# error = training_MSE_toPlot(xpoints, solutions, solutionIndex)
+# #print(pd.Series(error))
+# ax1 = plt.subplot(311)
+# ax1.plot(xpoints, sin(xpoints), 'k-', linewidth=4)
+# ax1.plot(xpoints, avgFittedFunction(solutions)[solutionIndex](xpoints), 'g-', linewidth=4)
+# ax1.set_xlim([xmin,xmax])
+# ax1.set_ylim([-1.25,1.25])
+# for i in range(numberOfTrainingSets):
 #       # print('')
-      plt.plot(xpoints,solutions[i][solutionIndex](xpoints),'y-')
+#       ax1.plot(xpoints,solutions[i][solutionIndex](xpoints),'y-')
 #       # print(solutions[index][s])
 #       # print(training_MSE_ByComplexity(dataSetsTrain, solutions)[index][s])
-plt.show()
+# ax2 = plt.subplot(312, sharex=ax1)
+# plt.plot(xpoints, pd.Series(error), 'r--', linewidth=4)
+# ax2.set_xlim([xmin,xmax])
+# ax2.set_ylim([0,.5])
+# plt.show()
 
 # ******Plot By Polynomial Complexity Across All Training Sets with Average Fit******
 # plt.plot(xpoints, sin(xpoints), 'k-', linewidth=4)
@@ -159,7 +177,7 @@ plt.show()
 #       print(trainingMSE[index][s])
 
 
-# Prints solution bias by complexity
+# NOT SURE IF THIS IS RIGHT! Prints solution bias by complexity
 # solutionBias = solutionBias_ByComplexity(dataSetsTest, solutions)
 # for s in range(polynomialDegrees.__len__()) :
 #       print(solutionBias[s])
@@ -173,4 +191,4 @@ plt.show()
 # print(avgFittedFunction(solutions)[2])
 
 # Training MSE plot validation
-# print(training_MSE_toPlot(dataSetsTrain, solutions, solutionIndex))
+print(training_MSE_toPlot(xpoints, solutions, solutionIndex))
