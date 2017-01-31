@@ -74,7 +74,7 @@ def avgFittedFunction(solutionSet):
                   sumEst = sumEst + solutionSet[i][s]
             avgEstimators[s] = sumEst / numberOfTrainingSets
       return avgEstimators
-
+#Not sure if this one is riight......
 def solutionBias_ByComplexity(dataSetTest, solutionSet):
       solutionBias = {}
       avgEstimators = avgFittedFunction(solutionSet)
@@ -146,23 +146,23 @@ y = dataSetsTrain[index]['y']
 # plt.show()
 
 # ******Plot By Polynomial Complexity Across All Training Sets with Average Fit******
-error = training_MSE_toPlot(xpoints, solutions, solutionIndex, index)
-#print(pd.Series(error))
-ax1 = plt.subplot(311)
-ax1.plot(xpoints, sin(xpoints), 'k-', linewidth=4)
-ax1.plot(xpoints, avgFittedFunction(solutions)[solutionIndex](xpoints), 'g-', linewidth=4)
-ax1.set_xlim([xmin,xmax])
-ax1.set_ylim([-1.25,1.25])
-for i in range(numberOfTrainingSets):
-      # print('')
-      ax1.plot(xpoints,solutions[i][solutionIndex](xpoints),'y-')
-      # print(solutions[index][s])
-      # print(training_MSE_ByComplexity(dataSetsTrain, solutions)[index][s])
-ax2 = plt.subplot(312, sharex=ax1)
-plt.plot(xpoints, pd.Series(error), 'r--', linewidth=4)
-ax2.set_xlim([xmin,xmax])
-ax2.set_ylim([0,.5])
-plt.show()
+# error = training_MSE_toPlot(xpoints, solutions, solutionIndex, index)
+# #print(pd.Series(error))
+# ax1 = plt.subplot(311)
+# ax1.plot(xpoints, sin(xpoints), 'k-', linewidth=4)
+# ax1.plot(xpoints, avgFittedFunction(solutions)[solutionIndex](xpoints), 'g-', linewidth=4)
+# ax1.set_xlim([xmin,xmax])
+# ax1.set_ylim([-1.25,1.25])
+# for i in range(numberOfTrainingSets):
+#       # print('')
+#       ax1.plot(xpoints,solutions[i][solutionIndex](xpoints),'y-')
+#       # print(solutions[index][s])
+#       # print(training_MSE_ByComplexity(dataSetsTrain, solutions)[index][s])
+# ax2 = plt.subplot(312, sharex=ax1)
+# plt.plot(xpoints, pd.Series(error), 'r--', linewidth=4)
+# ax2.set_xlim([xmin,xmax])
+# ax2.set_ylim([0,.5])
+# plt.show()
 
 # ******Plot By Polynomial Complexity Across All Training Sets with Average Fit******
 # plt.plot(xpoints, sin(xpoints), 'k-', linewidth=4)
@@ -185,10 +185,112 @@ plt.show()
 
 
 
+#Bias and variance by complexity
+#Setup
+polynomialDegrees = np.linspace(1, 12, endpoint=True, num=12)
+# polynomialDegrees = [12]
+dataPointsPerTrainingSet = 60
+testSplit = .1
+xpoints = np.linspace(-math.pi, math.pi, 200)
+index=0
+seedMap = np.linspace(1, 100,  endpoint=True, num=100)
+numberOfTrainingSets = seedMap.__len__()
+
+dSTrain = {}
+dSTest = {}
+for i in range(numberOfTrainingSets):
+      dSTrain[i] = {}
+      dSTest[i] = {}
+      dataSet = createSineData(dataPointsPerTrainingSet, seedMap[i])
+      train, test = train_test_split(dataSet, test_size=testSplit)
+      dSTrain[i]['x'] = train[:,0]
+      dSTrain[i]['y'] = train[:,1]
+      dSTest[i]['x'] = test[:,0]
+      dSTest[i]['y'] = test[:,1]
+
+solutionSet = {}
+for i in range(numberOfTrainingSets):
+      solutionSet[i]={}
+      for s in range(polynomialDegrees.__len__()):
+            x2 = dSTrain[i]['x']
+            y2 = dSTrain[i]['y']
+            f1 = np.polyfit(x2, y2, polynomialDegrees[s])
+            solutionSet[i][s] = poly1d(f1)
+
+
+# Training Error
+# trainingError = {}
+# for s in range(polynomialDegrees.__len__()):
+#       avg = 0
+#       for i in range(numberOfTrainingSets):
+#             avg = avg + np.mean((np.polyval(solutionSet[i][s], dSTrain[i]['x']) - dSTrain[i]['y']) ** 2)
+#       trainingError[s+1] = avg/numberOfTrainingSets
+#
+# axes = plt.gca()
+# axes.set_xlim([0,polynomialDegrees.__len__()+1])
+# axes.set_ylim([0,np.max(list(trainingError.values()))+.25])
+#
+# plt.plot(list(trainingError.keys()), list(trainingError.values()), 'b-')
+# plt.show()
+
+
+
+# Test Error
+testError = {}
+for s in range(polynomialDegrees.__len__()):
+      avg = 0
+      for i in range(numberOfTrainingSets):
+            avg = avg + np.mean((np.polyval(solutionSet[i][s], dSTest[i]['x']) - dSTest[i]['y']) ** 2)
+            testError[s+1] = avg/numberOfTrainingSets
+
+axes = plt.gca()
+axes.set_xlim([0,polynomialDegrees.__len__()+1])
+axes.set_ylim([0,np.max(list(testError.values()))+.25])
+# plt.plot(list(testError.keys()), list(testError.values()), 'r--')
+# plt.show()
+
+# Bias Squared
+biasSquared = {}
+for s in range(polynomialDegrees.__len__()):
+      sum = 0
+      for i in range(numberOfTrainingSets):
+            x = pd.Series(dSTest[i]['x'])
+            f = np.vectorize(lambda x: math.sin(x))
+            y = x.apply(f)
+            sum = sum + np.mean((np.polyval(solutionSet[i][s], dSTest[i]['x']) - y) ** 2)
+            biasSquared[s+1] = sum/numberOfTrainingSets
+
+axes = plt.gca()
+axes.set_xlim([0,polynomialDegrees.__len__()+1])
+axes.set_ylim([0,np.max(list(biasSquared.values()))+.25])
+
+plt.plot(list(testError.keys()), list(testError.values()), 'b--')
+plt.plot(list(biasSquared.keys()), list(biasSquared.values()), 'r--')
+plt.show()
+
+
+#Combined avg fit, true function, and scatterplots
+# solutionIndex=11
+# for i in range(numberOfTrainingSets):
+#       plt.scatter(dSTest[i]['x'], dSTest[i]['y'], color='r')
+#       plt.scatter(dSTest[i]['x'], np.polyval(solutionSet[i][solutionIndex], dSTest[i]['x']), color='y')
+# plt.plot(xpoints, sin(xpoints), 'b--')
+# plt.plot(xpoints, np.polyval(avgFittedFunction(solutionSet)[solutionIndex], xpoints), 'g-')
+# plt.show()
+
+
 #VALIDATIONS**********************
 # Validate avg fitted function
+
 # print(solutions)
 # print(avgFittedFunction(solutions)[2])
 
 # Training MSE plot validation
 # print(training_MSE_toPlot(xpoints, solutions, solutionIndex, index))
+
+#Scatter plot validation of test error
+# ind = 0
+# sol_Index = 12
+# plt.scatter(dSTest[ind]['x'], dSTest[ind]['y'], color='r')
+# plt.scatter(dSTest[ind]['x'], np.polyval(solutionSet[ind][sol_Index], dSTest[ind]['x']), color='y')
+# plt.show()
