@@ -249,34 +249,36 @@ for i in range(numberOfTrainingSets):
 # plt.plot(list(testError.keys()), list(testError.values()), 'r--')
 # plt.show()
 
-Bias Squared
-biasSquared = {}
-x = np.linspace(-math.pi, math.pi, 100)
-f = np.vectorize(lambda x: math.sin(x))
-y = x.apply(f)
-for s in range(polynomialDegrees.__len__()):
-      sum = 0
-      for i in range(numberOfTrainingSets):
-            sum = sum + np.mean((np.polyval(solutionSet[i][s], dSTest[i]['x']) - y) ** 2)
-            biasSquared[s+1] = sum/numberOfTrainingSets
-
-axes = plt.gca()
-axes.set_xlim([0,polynomialDegrees.__len__()+1])
-axes.set_ylim([0,np.max(list(biasSquared.values()))+.25])
-
-plt.plot(list(testError.keys()), list(testError.values()), 'b--')
-plt.plot(list(biasSquared.keys()), list(biasSquared.values()), 'r--')
-plt.show()
+#Bias Squared
+# biasSquared = {}
+# x = np.linspace(-math.pi, math.pi, 100)
+# f = np.vectorize(lambda x: math.sin(x))
+# y = x.apply(f)
+# for s in range(polynomialDegrees.__len__()):
+#       sum = 0
+#       for i in range(numberOfTrainingSets):
+#             sum = sum + np.mean((np.polyval(solutionSet[i][s], dSTest[i]['x']) - y) ** 2)
+#             biasSquared[s+1] = sum/numberOfTrainingSets
+#
+# axes = plt.gca()
+# axes.set_xlim([0,polynomialDegrees.__len__()+1])
+# axes.set_ylim([0,np.max(list(biasSquared.values()))+.25])
+#
+# plt.plot(list(testError.keys()), list(testError.values()), 'b--')
+# plt.plot(list(biasSquared.keys()), list(biasSquared.values()), 'r--')
+# plt.show()
 
 
 #Combined avg fit, true function, and scatterplots
-# solutionIndex=11
-# for i in range(numberOfTrainingSets):
-#       plt.scatter(dSTest[i]['x'], dSTest[i]['y'], color='r')
-#       plt.scatter(dSTest[i]['x'], np.polyval(solutionSet[i][solutionIndex], dSTest[i]['x']), color='y')
-# plt.plot(xpoints, sin(xpoints), 'b--')
-# plt.plot(xpoints, np.polyval(avgFittedFunction(solutionSet)[solutionIndex], xpoints), 'g-')
-# plt.show()
+solutionIndex=5
+
+
+for i in range(numberOfTrainingSets):
+      plt.scatter(dSTest[i]['x'], dSTest[i]['y'], color='r')
+      plt.scatter(dSTest[i]['x'], np.polyval(solutionSet[i][solutionIndex], dSTest[i]['x']), color='y')
+plt.plot(xpoints, sin(xpoints), 'b--')
+plt.plot(xpoints, np.polyval(avgFittedFunction(solutionSet)[solutionIndex], xpoints), 'g-')
+plt.show()
 
 
 #VALIDATIONS**********************
