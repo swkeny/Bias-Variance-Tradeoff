@@ -12,7 +12,7 @@ xmax = math.pi
 ymin = -2
 ymax = 2
 polynomialDegrees = [1, 2, 3, 6, 10]
-dataPointsPerTrainingSet = 40
+dataPointsPerTrainingSet = 50
 testSplit = 0.2
 
 seedMap = [123, 232, 13, 100, 344, 45, 71, 99, 199, 80]
@@ -29,11 +29,11 @@ def createSineData(n, seed):
     return np.stack((x, y), axis=-1)
 
 # Calculate Training MSE
-def MSE_ByComplexity(dataSet, solutionSet):
+def training_MSE_ByComplexity(dataSetTrain, solutionSet):
       avgMSE = {}
       for i in range(numberOfTrainingSets):
-            x = dataSet[i]['x']
-            y = dataSet[i]['y']
+            x = dataSetTrain[i]['x']
+            y = dataSetTrain[i]['y']
             avgMSE[i] = {}
             for s in range(polynomialDegrees.__len__()):
                   avgMSE[i][s] = np.mean((np.polyval(solutionSet[i][s], x) - y) ** 2)
@@ -48,7 +48,7 @@ def transformArray(array, len):
                   transformedArray[i][j] = array[j][i]
       return transformedArray
 #For a given solution, average squared error across all datasets
-def MSE_toPlot(xpoints, solutionSet, solutionIndex, index):
+def training_MSE_toPlot(xpoints, solutionSet, solutionIndex, index):
       meanSquaredError = {}
       result = {}
       len = xpoints.__len__()
@@ -110,7 +110,7 @@ for x in range(numberOfTrainingSets):
 
 
 
-xpoints = np.linspace(-math.pi, math.pi, 100)
+xpoints = np.linspace(-math.pi, math.pi, 200)
 axes = plt.gca()
 axes.set_xlim([xmin,xmax])
 axes.set_ylim([ymin,ymax])
@@ -124,15 +124,15 @@ y = dataSetsTrain[index]['y']
 # ******Plot Scatter Plot Of Training Data Set******
 # plt.plot(x,y,'bx')
 
-# ******REMOVE Plot By Polynomial Complexity For One Training Set******
+#******Plot By Polynomial Complexity For One Training Set******
 # for s in range(polynomialDegrees.__len__()):
 #       plt.plot(xpoints,solutions[index][s](xpoints),'r-')
 #       print("Mean squared error: %.6f"
 #             % np.mean((np.polyval(solutions[index][s], x) - y) ** 2))
 #       print(solutions[index][s])
 # plt.show()
-#
-#
+
+
 # ax1 = plt.subplot(131)
 # ax1.plot([1,2], [3,4])
 # ax1.set_xlim([0, 5])
@@ -146,35 +146,36 @@ y = dataSetsTrain[index]['y']
 # plt.show()
 
 # ******Plot By Polynomial Complexity Across All Training Sets with Average Fit******
-# error = MSE_toPlot(xpoints, solutions, solutionIndex, index)
-# #print(pd.Series(error))
-# ax1 = plt.subplot(311)
-# ax1.plot(xpoints, sin(xpoints), 'k-', linewidth=4)
-# ax1.plot(xpoints, avgFittedFunction(solutions)[solutionIndex](xpoints), 'g-', linewidth=4)
-# ax1.set_xlim([xmin,xmax])
-# ax1.set_ylim([-1.25,1.25])
-# for i in range(numberOfTrainingSets):
-#       ax1.plot(xpoints,solutions[i][solutionIndex](xpoints),'y-')
-# ax2 = plt.subplot(312, sharex=ax1)
-# plt.plot(xpoints, pd.Series(error), 'r--', linewidth=4)
-# ax2.set_xlim([xmin,xmax])
-# ax2.set_ylim([0,.5])
-# plt.show()
+error = MSE_toPlot(xpoints, solutions, solutionIndex, index)
+
+#print(pd.Series(error))
+ax1 = plt.subplot(311)
+ax1.plot(xpoints, sin(xpoints), 'k-', linewidth=4)
+ax1.plot(xpoints, avgFittedFunction(solutions)[solutionIndex](xpoints), 'g-', linewidth=4)
+ax1.set_xlim([xmin,xmax])
+ax1.set_ylim([-1.25,1.25])
+for i in range(numberOfTrainingSets):
+      # print('')
+      ax1.plot(xpoints,solutions[i][solutionIndex](xpoints),'y-')
+      # print(solutions[index][s])
+      # print(training_MSE_ByComplexity(dataSetsTrain, solutions)[index][s])
+ax2 = plt.subplot(312, sharex=ax1)
+plt.plot(xpoints, pd.Series(error), 'r--', linewidth=4)
+ax2.set_xlim([xmin,xmax])
+ax2.set_ylim([0,.5])
+plt.show()
 
 # ******Plot By Polynomial Complexity Across All Training Sets with Average Fit******
 # plt.plot(xpoints, sin(xpoints), 'k-', linewidth=4)
-#
-# for s in range(len(polynomialDegrees)):
+# for s in range(polynomialDegrees.__len__()):
 #       plt.plot(xpoints, avgFittedFunction(solutions)[s](xpoints), 'g-', linewidth=2)
 # plt.show()
 
 
 # ******Training MSE by complexity for a training data set******
-# trainingMSE = MSE_ByComplexity(dataSetsTest, solutions)
-# for s in range(len(polynomialDegrees)) :
+# trainingMSE = training_MSE_ByComplexity(dataSetsTrain, solutions)
+# for s in range(polynomialDegrees.__len__()) :
 #       print(trainingMSE[index][s])
-
-
 
 
 # NOT SURE IF THIS IS RIGHT! Prints solution bias by complexity
@@ -249,14 +250,14 @@ for i in range(numberOfTrainingSets):
 # plt.plot(list(testError.keys()), list(testError.values()), 'r--')
 # plt.show()
 
-#Bias Squared
+# Bias Squared
 # biasSquared = {}
-# x = np.linspace(-math.pi, math.pi, 100)
-# f = np.vectorize(lambda x: math.sin(x))
-# y = x.apply(f)
 # for s in range(polynomialDegrees.__len__()):
 #       sum = 0
 #       for i in range(numberOfTrainingSets):
+#             x = pd.Series(dSTest[i]['x'])
+#             f = np.vectorize(lambda x: math.sin(x))
+#             y = x.apply(f)
 #             sum = sum + np.mean((np.polyval(solutionSet[i][s], dSTest[i]['x']) - y) ** 2)
 #             biasSquared[s+1] = sum/numberOfTrainingSets
 #
@@ -270,15 +271,13 @@ for i in range(numberOfTrainingSets):
 
 
 #Combined avg fit, true function, and scatterplots
-solutionIndex=5
-
-
-for i in range(numberOfTrainingSets):
-      plt.scatter(dSTest[i]['x'], dSTest[i]['y'], color='r')
-      plt.scatter(dSTest[i]['x'], np.polyval(solutionSet[i][solutionIndex], dSTest[i]['x']), color='y')
-plt.plot(xpoints, sin(xpoints), 'b--')
-plt.plot(xpoints, np.polyval(avgFittedFunction(solutionSet)[solutionIndex], xpoints), 'g-')
-plt.show()
+# solutionIndex=11
+# for i in range(numberOfTrainingSets):
+#       plt.scatter(dSTest[i]['x'], dSTest[i]['y'], color='r')
+#       plt.scatter(dSTest[i]['x'], np.polyval(solutionSet[i][solutionIndex], dSTest[i]['x']), color='y')
+# plt.plot(xpoints, sin(xpoints), 'b--')
+# plt.plot(xpoints, np.polyval(avgFittedFunction(solutionSet)[solutionIndex], xpoints), 'g-')
+# plt.show()
 
 
 #VALIDATIONS**********************
@@ -288,7 +287,7 @@ plt.show()
 # print(avgFittedFunction(solutions)[2])
 
 # Training MSE plot validation
-# print(MSE_toPlot(xpoints, solutions, solutionIndex, index))
+# print(training_MSE_toPlot(xpoints, solutions, solutionIndex, index))
 
 #Scatter plot validation of test error
 # ind = 0

@@ -1,3 +1,24 @@
+
+When performing regression analyses we would like to characterize how the value of some dependent variable changes as some independent variable x is varied
+
+
+Underfitting occurs when an estimator g(x) is not flexible enough to capture the underlying trends in the observed data. Overfitting occurs when an estimator is too flexible, allowing it to capture illusory trends in the data. These illusory trends are often the result of the noise in the observations y.
+variance of the estimator. Formally defined as
+variance=\mathbb E[(g(x)-\mathbb E[g(x)])^2]
+the variance is the average squared difference between any single data-set-dependent estimate of g(x) and the average value of g(x) estimated over all datasets.
+According to the definition of variance, we can say that the estimator g_1(x) exhibits low variance.
+A commonly-used metric in statistics for assessing how an estimator g(x) approximates a target function f(x), based on behavior over many observed data sets is what is called the bias of the estimator. Formally defined as:
+bias = \mathbb E[g(x)] - f(x)
+The bias describes how much the average estimator fit over datasets \mathbb E[g(x)] deviates from the value of the underlying target function f(x).
+
+
+
+
+
+
+
+
+
 http://insidebigdata.com/2014/10/22/ask-data-scientist-bias-vs-variance-tradeoff/
 
 
