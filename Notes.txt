@@ -1,3 +1,16 @@
+from IPython.core.display import Image, display
+display(Image('https://theclevermachine.files.wordpress.com/2013/04/bias-variance-train-test-error.png', width=600, unconfined=True))
+
+## Fitting a 0-degree Polynomial 
+p0 = np.poly1d(np.polyfit(x, y, 0))
+xpoints = np.linspace(-math.pi, math.pi, 300)
+_ = plt.plot(x, y, '.')
+_ = plt.plot(xpoints, p0(xpoints), '-', label = 'degree 0 fit')
+_ = plt.legend(loc='upper left')
+fig = matplotlib.pyplot.gcf()
+fig.set_size_inches(10, 7)
+
+
 
 When performing regression analyses we would like to characterize how the value of some dependent variable changes as some independent variable x is varied
 
@@ -51,7 +64,7 @@ Variance: Degree to which the model changes as test data changes. Generally More
 Bias: error introduced by approximating a real-life problem, which may be extremely complicated, by a much simpler 
 	model. Generally More flexible models -> lower bias
 
-"As a general rule, as we use more ?exible methods, the variance will increase and the bias will decrease. "
+"As a general rule, as we use more fexible methods, the variance will increase and the bias will decrease. "
 
 
 http://www.inf.ed.ac.uk/teaching/courses/mlsc/Notes/Lecture4/BiasVariance.pdf
